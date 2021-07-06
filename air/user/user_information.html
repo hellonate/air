@@ -1,4 +1,3 @@
-
 <!DOCTYPE HTML>
 <html>
 	<head>
@@ -6,93 +5,110 @@
 		<title></title>
 		<link rel="stylesheet" href="css/xxq.css" />
 		<link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
-	    <link rel="stylesheet" href="css/bootstrap.css" />
-	    <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
-	    <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    </head>
+		<link rel="stylesheet" href="css/bootstrap.css" />
+		<script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+		<script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	</head>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$.ajax({
+				//几个参数需要注意一下
+				type: "get", //方法类型
+				dataType: "json", //预期服务器返回的数据类型
+				url: "http://127.0.0.1:8080/air/getUserInfo?id=1", //url
+				async: false,
+				data: $('#form1').serialize(),
+				success: function(res) {
+					console.log(res); //打印服务端返回的数据(调试用)
+					var str = "";
+					var data = res.data;
+					str += "<tr><td>" + data['name'] + "</td><td>" + data['identity'] +"</td><td>" + data['password'] + "</td><td>" + data['question'] +"</td><td>" + data['answer'] +"</td></tr>";
+                   $('#userInfo').append(str);
+				   
+				   var str2="";
+				   
+				   str2 += "<tr><td>" + data['finishNum'] + "</td><td>" + data['rightNum'] +"</td><td>" + data['errorNum'] + "</td></tr>";
+				   $('#finishedQuestion').append(str2);
+				},
+				error: function(error) {
+					alert("异常！ error"+error);
+				}
+			});
+		});
+	</script>
+
 	<body>
 		<div class="middle">
 			<div class="information">
 				<div class="panel-group" id="accordion">
-	                <div class="panel panel-default">
-		                <div class="panel-heading">
-			                <h4 class="panel-title">
-				                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
-					                                我的个人信息
-				                </a>
-			                </h4>
-		                </div>
-		            <% User user = (User) request.getAttribute("user"); 
-		            %>
-		            <div id="collapseOne" class="panel-collapse collapse in">
-			            <div class="panel-body">
-				            <table  class="table table-striped">
-					            <thead>
-                                    <tr>
-                                    <th>姓名</th>
-                                    <th>身份证号</th>
-                                    <th>账户密码</th>
-                                    <th>问题</th>
-                                    <th>答案</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                    <td><%=user.getName()%></td>
-                                    <td><%=user.getIdentity() %></td>
-                                    <td><%=user.getPassword() %></td>
-                                    <td><%=user.getQuestion() %></td>
-                                    <td><%=user.getAnswer() %></td>
-                                    </tr> 
-                                </tbody>
-                                
-			                </table>
-			                <table  class="table table-striped">
-					            <thead>
-                                    <tr>
-                                    <th>已完成题目</th>
-                                    <th>做对题目</th>
-                                    <th>做错题目</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                    <td><%=user.getFinishNum() %></td>
-                                    <td><%=user.getRightNum() %></td>
-                                    <td><%=user.getErrorNum() %></td>
-                                    </tr> 
-                                </tbody>
-                                
-			                </table>
-			            </div>
-		            </div>
-	                </div>
-	                
-	                <div class="panel panel-default">
-		                <div class="panel-heading">
-			                <h4 class="panel-title">
-				                <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
-					                                我做过的自主测试
-				                </a>
-			                </h4>
-		                </div>
-		            <div id="collapseTwo" class="panel-collapse collapse">
-			            <div class="panel-body">
-				            <table  class="table table-striped">
-					            <thead>
-                                    <tr>
-                                    <th>考试名称</th>
-                                    <th>成绩</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                <% ArrayList<Exam> zikao = (ArrayList<Exam>) request.getAttribute("zikao"); %>
-                                <% for(Exam exam:zikao){ %>
-                                 <tr>
-                                    <td><%=exam.getExamName()%></td>
-                                	<td><%=exam.getChoiceScore()+exam.getJudgeScore()+exam.getBlankScore() %></td>
-                                 </tr> 
-                                 <%}%>   
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h4 class="panel-title">
+								<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+									我的个人信息
+								</a>
+							</h4>
+						</div>
+
+						<div id="collapseOne" class="panel-collapse collapse in">
+							<div class="panel-body">
+								<table class="table table-striped">
+									<thead>
+										<tr>
+											<th>姓名</th>
+											<th>身份证号</th>
+											<th>账户密码</th>
+											<th>问题</th>
+											<th>答案</th>
+										</tr>
+									</thead>
+									<tbody id="userInfo">
+
+									</tbody>
+
+								</table>
+								<table class="table table-striped">
+									<thead>
+										<tr>
+											<th>已完成题目</th>
+											<th>做对题目</th>
+											<th>做错题目</th>
+										</tr>
+									</thead>
+									<tbody id="finishedQuestion">
+										
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h4 class="panel-title">
+								<a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+									我做过的自主测试
+								</a>
+							</h4>
+						</div>
+						<div id="collapseTwo" class="panel-collapse collapse">
+							<div class="panel-body">
+								<table class="table table-striped">
+									<thead>
+										<tr>
+											<th>考试名称</th>
+											<th>成绩</th>
+										</tr>
+									</thead>
+									<tbody>
+										<% ArrayList<Exam> zikao = (ArrayList<Exam>) request.getAttribute("zikao"); %>
+										<% for(Exam exam:zikao){ %>
+										<tr>
+											<td><%=exam.getExamName()%></td>
+											<td><%=exam.getChoiceScore()+exam.getJudgeScore()+exam.getBlankScore() %>
+											</td>
+										</tr>
+										<%}%>   
                                 </tbody>
 			                </table>
 			            </div>
@@ -118,57 +134,59 @@
                                 </thead>
                                 <tbody>
                                 <% ArrayList<Exam> tongkao = (ArrayList<Exam>) request.getAttribute("tongkao"); %>
-                                <% 
+										<% 
                                 	PaperDaoImpl paperDaoImpl = new PaperDaoImpl();
                                 	for(Exam exam:tongkao){ 
                                 		if(paperDaoImpl.getPaperByExamId(exam.getId()) != null){
                                 			Paper paper = paperDaoImpl.getPaperByExamId(exam.getId());
                                 %>
-                                 <tr>
-                                    <td><%=exam.getExamName()%></td>
-                                	<td><%=paper.getScore() %></td>
-                                 </tr> 
-                                 <%}}%>  
-                                </tbody>
-			                </table>
-			            </div>
-		            </div>
-	                </div>
-                
-                	<div class="panel panel-default">
-		                <div class="panel-heading">
-			                <h4 class="panel-title">
-				                <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour">
-					                                未参加的统考考试
-				                </a>
-			                </h4>
-		                </div>
-		            <div id="collapseFour" class="panel-collapse collapse">
-			            <div class="panel-body">
-				            <table  class="table table-striped">
-					            <thead>
-                                    <tr>
-                                    <th>考试名称</th>
-                                    <th>状态</th>
-                                    </tr>
-                                </thead>
-                                 <tbody>
-                                <% 
+										<tr>
+											<td><%=exam.getExamName()%></td>
+											<td><%=paper.getScore() %></td>
+										</tr>
+										<%}}%>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h4 class="panel-title">
+								<a data-toggle="collapse" data-parent="#accordion" href="#collapseFour">
+									未参加的统考考试
+								</a>
+							</h4>
+						</div>
+						<div id="collapseFour" class="panel-collapse collapse">
+							<div class="panel-body">
+								<table class="table table-striped">
+									<thead>
+										<tr>
+											<th>考试名称</th>
+											<th>状态</th>
+										</tr>
+									</thead>
+									<tbody>
+										<% 
                                 	for(Exam exam:tongkao){ 
                                 		if(paperDaoImpl.getPaperByExamId(exam.getId()) == null){
                                 %>
-                                 <tr>
-                                    <td><%=exam.getExamName()%></td>
-                                	<td><a href="<%=request.getContextPath() %>/UserExamTestServlet?param=join&examId=<%=exam.getId() %>" >参与考试</a></td>
-                                 </tr> 
-                                 <%}}%>  
-                                </tbody>
-			                </table>
-			            </div>
-		            </div>
-	                </div>
-                
-                </div>
+										<tr>
+											<td><%=exam.getExamName()%></td>
+											<td><a
+													href="<%=request.getContextPath() %>/UserExamTestServlet?param=join&examId=<%=exam.getId() %>">参与考试</a>
+											</td>
+										</tr>
+										<%}}%>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+
+				</div>
 			</div>
 		</div>
 		<!--<div class="bottom">
